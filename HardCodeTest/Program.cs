@@ -8,11 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
 services.AddControllers();
+var appConfigBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+var appConfiguration = appConfigBuilder.Build();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
+var connectionString = ConfigurationExtensions.GetConnectionString(appConfiguration, "DefaultConnection");
+//services.AddDbContext<HardCodeDbContext>(options => options.UseNpgsql(connectionString));
+services.AddDbContext<HardCodeDbContext>(options => options.UseSqlServer(connectionString));
 
-services.AddDbContext<HardCodeDbContext>(options => options.UseNpgsql("Host=localhost;Database=hardcode_db;Username=postgres;Password=oltEmch1"));//TODO hide the password
 services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();

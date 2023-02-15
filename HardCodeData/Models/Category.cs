@@ -6,6 +6,7 @@ namespace HardCodeData.Models
     {
         [Required]
         public string Name { get; set; }
-        public List<MiscField>? MiscFields { get; set; }
+        public IList<MiscField>? MiscFields { get; set; }
+        public IList<Product>? Products { get; set; }
     }
 }

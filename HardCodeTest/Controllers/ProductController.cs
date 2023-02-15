@@ -20,7 +20,7 @@ namespace HardCodeTest.Controllers
         public ActionResult GetAllProducts()
         {
             var products = _db.Set<Product>()
-                .Include(p=>p.Category).ThenInclude(c=>c.MiscFields)
+                //.Include(p=>p.Category).ThenInclude(c=>c.MiscFields)
                 .ToList();
             if (products is null) return NotFound();
             return Ok(products);
@@ -30,7 +30,7 @@ namespace HardCodeTest.Controllers
         public ActionResult GetProduct(int id)
         {
             var product = _db.Set<Product>()
-                .Include(p => p.Category).ThenInclude(c => c.MiscFields)
+                //.Include(p => p.Category).ThenInclude(c => c.MiscFields)
                 .SingleOrDefault(p=>p.Id== id);
             if (product is null) return NotFound();
             return Ok(product);

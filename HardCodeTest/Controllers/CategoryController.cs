@@ -21,15 +21,23 @@ namespace HardCodeTest.Controllers
             var categories = _db.Set<Category>()
                 .Include(c => c.MiscFields)
                 .ToList();
-            
-            return Ok(categories);
+            var categoryDTOs = categories.Select(_mapper.Map<CategoryDTO>).ToList();
+            return Ok(categoryDTOs);
         }
         [HttpPost]
         public ActionResult AddCategory([FromBody]CategoryDTO categoryDTO) 
         {
             var category = _mapper.Map<Category>(categoryDTO);
-            _db.Add(category);
-            _db.SaveChanges();
+            try
+            {
+                _db.Add(category);
+                _db.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
             return CreatedAtAction(nameof(AddCategory),category);
         }
         [HttpDelete]
