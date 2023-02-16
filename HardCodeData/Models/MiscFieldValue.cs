@@ -6,5 +6,9 @@ namespace HardCodeData.Models
     {
         [Required]
         public string FieldValue { get; set; }
+        public int MiscFieldId { get; set; }
+        public MiscField MiscField { get; set; }
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
     }
 }

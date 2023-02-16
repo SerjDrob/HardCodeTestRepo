@@ -1,7 +1,6 @@
-﻿using HardCodeData.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace HardCodeTest.DTOs
+namespace HardCodeFront.Models
 {
     public class ProductDTO
     {
@@ -12,9 +11,6 @@ namespace HardCodeTest.DTOs
         public decimal Price { get; set; }
         public int CategoryId { get; set; }
         public string? CategoryName { get; set; }
-        /// <summary>
-        /// MiscFieldId,MiscFildValue
-        /// </summary>
         public IDictionary<int,string>? AdditionalFields { get; set; }
     }
 }

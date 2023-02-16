@@ -21,13 +21,13 @@ namespace HardCodeTest.Data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<MiscField>()
                 .HasMany(mf=>mf.MiscFieldValues)
-                .WithOne()
+                .WithOne(v=>v.MiscField)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Category>()
                 .HasMany(c=>c.Products)
-                .WithOne()
+                .WithOne(p=>p.Category)
                 .OnDelete(DeleteBehavior.Cascade);
-            base.OnModelCreating(modelBuilder);
+            //base.OnModelCreating(modelBuilder);
         }
     }
 }

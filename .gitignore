@@ -15,6 +15,8 @@
 *.userosscache
 *.sln.docstates
 *.dxf
+*.css
+*.map
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -403,3 +405,4 @@ obj/
 /wwwroot/node_modules
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp,dotnetcore
+/HardCodeFront/wwwroot/lib/

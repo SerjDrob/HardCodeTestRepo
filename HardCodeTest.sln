@@ -3,9 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33103.201
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardCodeTest", "HardCodeTest\HardCodeTest.csproj", "{F3AFFE17-10B4-499D-8305-28BFD0E48368}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardCodeTest", "HardCodeTest\HardCodeTest.csproj", "{F3AFFE17-10B4-499D-8305-28BFD0E48368}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30C89D13-75F6-44E0-AC50-519F6EDFE8AE} = {30C89D13-75F6-44E0-AC50-519F6EDFE8AE}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardCodeData", "HardCodeData\HardCodeData.csproj", "{3BA2E38F-5C8F-4A2D-8CA0-06296C226339}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardCodeData", "HardCodeData\HardCodeData.csproj", "{3BA2E38F-5C8F-4A2D-8CA0-06296C226339}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardCodeFront", "HardCodeFront\HardCodeFront.csproj", "{30C89D13-75F6-44E0-AC50-519F6EDFE8AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,10 @@ Global
 		{3BA2E38F-5C8F-4A2D-8CA0-06296C226339}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BA2E38F-5C8F-4A2D-8CA0-06296C226339}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BA2E38F-5C8F-4A2D-8CA0-06296C226339}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30C89D13-75F6-44E0-AC50-519F6EDFE8AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C89D13-75F6-44E0-AC50-519F6EDFE8AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30C89D13-75F6-44E0-AC50-519F6EDFE8AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30C89D13-75F6-44E0-AC50-519F6EDFE8AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

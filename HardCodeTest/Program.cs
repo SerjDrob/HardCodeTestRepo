@@ -13,9 +13,20 @@ var appConfiguration = appConfigBuilder.Build();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:7119")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod(); 
+                      });
+});
 var connectionString = ConfigurationExtensions.GetConnectionString(appConfiguration, "DefaultConnection");
-//services.AddDbContext<HardCodeDbContext>(options => options.UseNpgsql(connectionString));
-services.AddDbContext<HardCodeDbContext>(options => options.UseSqlServer(connectionString));
+services.AddDbContext<HardCodeDbContext>(options => options.UseNpgsql(connectionString));
+//services.AddDbContext<HardCodeDbContext>(options => options.UseSqlServer(connectionString));
 
 services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -31,6 +42,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.MapControllers();
 
