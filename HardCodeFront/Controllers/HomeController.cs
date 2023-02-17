@@ -1,28 +1,27 @@
 ﻿using HardCodeFront.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net.Http;
 
 namespace HardCodeFront.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
-        private readonly ILogger<HomeController> _logger;
-
-
-        public IActionResult GetProducts(IEnumerable<ProductDTO> products)
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory) : base(logger, httpClientFactory)
         {
-            return View(nameof(Index),products);
-        }
-
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var prodResponse = _httpClient.GetAsync("product").Result;
+            var productDTOs = prodResponse.Content.ReadFromJsonAsync<IEnumerable<ProductDTO>>().Result;
+            
+            var homeVM = new HomeVM 
+            {
+                CategorieNames = productDTOs.Select(c=>c.CategoryName).Distinct(), 
+                Products = productDTOs
+            };
+            return View(homeVM);
         }
 
         public IActionResult Privacy()

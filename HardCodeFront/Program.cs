@@ -1,8 +1,13 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Net.Http;
 
+var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddHttpClient("HardCodeTestAPI", conf =>
+{
+    conf.BaseAddress = new Uri("https://localhost:7186/api/");
+    conf.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

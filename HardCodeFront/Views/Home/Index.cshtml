@@ -1,37 +1,42 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model IEnumerable<ProductDTO>
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <div id="products">
-        
+@model HomeVM
+<div class="container">
+    <div class="text-center">
+        <button class="btn btn-dark filter-button" data-filter="all">All</button>
+        @foreach (var name in Model.CategorieNames)
+        {
+            <button class="btn btn-outline-secondary filter-button" data-filter="@name">
+                @name
+            </button>
+        }
+    </div>
+    <br />
+    <div class="row" id="products">        
         @if (Model is not null)
         {
-            @foreach (var prod in Model)
+            @foreach (var prod in Model.Products)
             {
                 <partial name="_ProductCard" model="prod" />
             }
         }
     </div>
 </div>
+
 @section Scripts{
     <script>
-        fetch('https://localhost:7186/api/product')
-        .then((responce)=>responce.json())
-            .then((data) => fetch('/getproducts', { body: data }))
-
-        function _displayCategories(data) {
-            const list = document.getElementById('categories');
-            list.innerHTML = ``;
-           
-            data.forEach(item => {
-                let row = document.createElement('li');
-                row.innerText=item.name;
-                list.appendChild(row);
+        $(document).ready(function () {
+            $(".filter-button").click(function () {
+                var value = $(this).attr('data-filter');
+                if (value == "all") {
+                    $('.filter').show('1000');
+                }
+                else {
+                    $(".filter").not('.' + value).hide('3000');
+                    $('.filter').filter('.' + value).show('3000');
+                }
             });
-        }
-
+        });
     </script>
 }

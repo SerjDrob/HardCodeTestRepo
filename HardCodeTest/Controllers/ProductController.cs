@@ -21,7 +21,7 @@ namespace HardCodeTest.Controllers
         public ActionResult GetAllProducts()
         {
             var products = _db.Set<Product>()
-                .Include(p=>p.MiscFieldValues)
+                .Include(p=>p.MiscFieldValues).ThenInclude(mv=>mv.MiscField)
                 .Include(p=>p.Category)
                 .ToList();
             if (products is null) return NotFound();
@@ -46,7 +46,7 @@ namespace HardCodeTest.Controllers
         {
             var category = _db.Set<Category>().SingleOrDefault(c=>c.Id== productDTO.CategoryId);
             var miscFieldsExists = productDTO.AdditionalFields
-                .Aggregate(true, (prev, cur) => prev & _db.Set<MiscField>().Any(c => c.Id == cur.Key));
+                .Aggregate(true, (prev, cur) => prev & _db.Set<MiscField>().Any(c => c.Id == cur.Id));
 
             if(category is null) return BadRequest($"Category {productDTO.CategoryId} doesn't exist");
             if (!miscFieldsExists) return BadRequest("One or more additional fields are invalid");
@@ -64,7 +64,7 @@ namespace HardCodeTest.Controllers
             var newFieldsValue = productDTO.AdditionalFields.Select(f => new MiscFieldValue
             {
                 FieldValue = f.Value,
-                MiscFieldId = f.Key,
+                MiscFieldId = f.Id,
                 Product = product
             });
 

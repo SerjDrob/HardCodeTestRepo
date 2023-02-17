@@ -13,8 +13,22 @@ namespace HardCodeTest.DTOs
         public int CategoryId { get; set; }
         public string? CategoryName { get; set; }
         /// <summary>
-        /// MiscFieldId,MiscFildValue
+        /// MiscFieldId, MiscFieldName,MiscFildValue
         /// </summary>
-        public IDictionary<int,string>? AdditionalFields { get; set; }
+        public IList<PropertyField>? AdditionalFields { get; set; }
+    }
+
+    public struct PropertyField
+    {
+        public PropertyField(int id, string name, string value)
+        {
+            Id = id;
+            Name = name;
+            Value = value;
+        }
+
+        public int Id { get; set; } 
+        public string Name { get; set; } 
+        public string Value { get; set; }
     }
 }

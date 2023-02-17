@@ -1,0 +1,163 @@
+﻿@model ProductCrEditVM
+@{
+    var title = "Новый продукт";
+}
+
+<form method="post" enctype="multipart/form-data">
+    @if (Model.ProductDTO.Id != 0)
+    {
+        title = "Редактирование";
+        <input asp-for="ProductDTO.Id" hidden />
+    }
+    <div class="border p-3 bg-white">
+
+        <div class="form-group row">
+            <h2 class="text-info pl-3">@title</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="ProductDTO.Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="ProductDTO.Name" class="form-control" />
+                        <span asp-validation-for="ProductDTO.Name" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="ProductDTO.Price"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="ProductDTO.Price" class="form-control" />
+                        <span asp-validation-for="ProductDTO.Price" class="text-danger"></span>
+                    </div>
+                </div>
+                @{
+                    var categories = Model.Categories;
+
+                    for (int n = 0; n < categories.Count(); n++)
+                    {
+                        var fields = categories.ElementAt(n).MiscFields;
+                        var nameid = "fieldgroup" + (n+1);
+                        <div id=@nameid hidden="hidden">
+                            @for (int i = 0; i < fields.Count(); i++)
+                            {
+
+                                if (fields is not null & fields.Count() > 0)
+                                {
+                                    var field = fields.ElementAt(i);
+
+                                    <div class="form-group row py-2">
+                                        <div class="col-4">
+                                            <label>@field</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="form-control" />
+                                        </div>
+                                    </div>
+
+                                }
+
+                            }
+                        </div>
+                    }
+                }
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="ProductDTO.Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="ProductDTO.Description" class="form-control summernote"></textarea>
+                        <span asp-validation-for="ProductDTO.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="ProductDTO.Image"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="ProductDTO.Image" accept=".jpg" type="file" id="uploadBox" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for="ProductDTO.CategoryName"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="ProductDTO.CategoryId" id="categorySelection" asp-items="@Model.Categories.Select(c=>new SelectListItem(){ Value=c.Id.ToString(), Text = c.Name})" class="form-select">
+                            <option disabled selected>--Select Category--</option>
+                        </select>
+                        <span asp-validation-for="ProductDTO.CategoryId" class="text-danger"></span>
+                    </div>
+
+                </div>
+                
+                <div class="form-group row py-2">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            @if (Model.ProductDTO.Id != 0)
+                            {
+                                <input type="submit" class="btn btn-info w-100" value="Update" />
+                            }
+                            else
+                            {
+                                <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" value="Create" />
+                            }
+
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fas fa-sign-out-alt"></i> Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script> 
+        let hidField =''
+        let selection = document.getElementById("categorySelection");
+        selection.addEventListener('change',(event)=>
+        {
+            if(hidField!=''){
+                let tohid = document.getElementById(hidField);
+                tohid.setAttribute('hidden',"hidden");
+            }
+            let val = selection.value;
+            hidField = "fieldgroup" + val;
+            let field = document.getElementById(hidField);
+            field.removeAttribute('hidden');
+        });
+       
+        
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                height: 250
+            });
+        });
+        //function validateInput() {
+        //    if (document.getElementById("uploadBox").value == "") {
+        //        Swal.fire(
+        //            'Error!',
+        //            'Please upload an Image!',
+        //            'error'
+        //        )
+        //        return false;
+        //    }
+        //    return true;
+        //}
+    </script>
+}

@@ -9,8 +9,8 @@ namespace HardCodeTest.DTOs.MapProfiles
         {
             CreateMap<Product, ProductDTO>()
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
-                .ForMember(dest=>dest.AdditionalFields, 
-                opt=>opt.MapFrom(src=>src.MiscFieldValues.ToDictionary(k=>k.MiscFieldId,v=>v.FieldValue)));
+                .ForMember(dest=>dest.AdditionalFields,                 
+                opt=>opt.MapFrom(src=>src.MiscFieldValues.Select(k=> new PropertyField(k.MiscFieldId,k.MiscField.Name, k.FieldValue ))));
         }
     }
 }
