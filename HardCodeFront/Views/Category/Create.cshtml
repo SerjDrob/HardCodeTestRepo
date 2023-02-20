@@ -1,0 +1,77 @@
+﻿@model CategoryDTO
+<head>
+    <style>
+        .marg{
+            margin-bottom:20px
+        }
+    </style>
+</head>
+<form method="post" asp-action="Create">
+    <div asp-validation-summary=All class="text-danger"></div>
+    <div class="border-p-3 bg-white">
+        <div class="form-group row py-2">            
+            <h2 class="text-info pl-3">Создать категорию</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row py-2">
+                    <div class="col-4">
+                        <label asp-for=Name></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for=Name class="form form-control" />
+                        <span asp-validation-for=Name class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div id="miscfields">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="ExistingFields[0]" placeholder="Дополнительное поле" aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button class="btn btn-outline-secondary" onclick="addField()" type="button" id="button-addon2">Добавить</button>
+                    </div>
+                </div>
+                
+                <div class="form-group row py-2">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                           <input type="submit" class="btn btn-success w-100" value="Создать" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+
+    @{<partial name="_ValidationScriptsPartial"/>}
+    <script>
+        let fieldNum = 1;
+        function addField(){
+            const element = document.getElementById('miscfields');
+            let divId = "fieldDiv"+fieldNum;
+            element.insertAdjacentHTML('beforeend',`
+                            <div id='${divId}' class="input-group mb-3">
+                                        <input type="text" class="form-control" name='ExistingFields[${fieldNum}]' placeholder="Дополнительное поле" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-secondary" onclick='removeField("${divId}","${fieldNum}")' type="button" id="button-addon2">Удалить</button>
+                            </div>
+            `)
+            fieldNum++;
+        }
+
+        function removeField(id,num){
+            let element = document.getElementById(id);
+            element.remove();
+
+            element = document.getElementById('miscfields');
+            element.insertAdjacentHTML('beforeend', `
+                                                        <input class="form-control" hidden='hidden' name='ExistingFields[${num}]'">
+                            `)
+        }
+    </script>
+}

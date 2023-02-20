@@ -1,0 +1,63 @@
+﻿@using HardCodeFront.Models
+@model IEnumerable<CategoryDTO>
+
+<div class="container p-3 bg-white" style="width:100%">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Список категорий</h2>
+        </div>
+        <div class="col-6" style="display: flex; justify-content: flex-end">
+            @{
+                var n = 0;
+                var keyvalues = new List<KeyValuePair<string,string>>();
+                var queryString = "/Category/Create?";
+                foreach(var name in Model.Select(c => c.Name))
+                {
+                    var key = "[" + n.ToString() + "]=" + name;
+                    queryString += key;
+                    if (n != Model.Count() - 1) queryString += "&";
+                    n++;
+                }
+                var args = new Dictionary<string, string>(keyvalues);
+            }
+            <a href="@queryString" class="btn btn-primary">Добавить</a>
+            <a asp-controller="Category" asp-action="Create" asp-all-route-data="args" class="btn btn-primary">
+                <i class="fas fa-plus"></i> &nbsp; Создать категорию
+            </a>
+        </div>
+    </div>
+    <br /><br/>
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <th>
+                    Название
+                </th>
+                <th></th>
+            </thead>
+            <tbody>
+                @foreach (var category in Model)
+                {
+                    <tr>
+                        <td width="80%">@category.Name</td>
+                        <td class="text-center">
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="Category" asp-route-Id="@category.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                    Удалить
+                                </a>
+                            </div>
+                         </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Нет категорий</p>
+        <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> &nbsp; Создать категорию
+        </a>
+    }
+</div>

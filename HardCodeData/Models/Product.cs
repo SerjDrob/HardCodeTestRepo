@@ -10,7 +10,7 @@ namespace HardCodeData.Models
         [Required]
         public string Name { get; set; }
         public string? Description { get; set; }
-       // [Column(TypeName = "decimal(18,4)")]
+        //[Column(TypeName = "decimal(18,4)")]
         public decimal Price { get; set; }
         public int CategoryId { get; set; }
         [JsonIgnore]

@@ -1,7 +1,9 @@
 ﻿using HardCodeFront.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace HardCodeFront.Controllers
 {
@@ -11,10 +13,10 @@ namespace HardCodeFront.Controllers
         {
         }
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var catResponse = _httpClient.GetAsync("category").Result;
-            var categoryDTOs = catResponse.Content.ReadFromJsonAsync<IEnumerable<CategoryDTO>>().Result;
+            var catResponse = await _httpClient.GetAsync("category");
+            var categoryDTOs = await catResponse.Content.ReadFromJsonAsync<IEnumerable<CategoryDTO>>();
 
             var model = new ProductCrEditVM
             {
@@ -25,8 +27,22 @@ namespace HardCodeFront.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Index(ProductCrEditVM productCrEdit) 
+        public async Task<IActionResult> Index(ProductCrEditVM productCrEdit) 
         {
+            var prodDto = productCrEdit.ProductDTO;
+
+            var catResponse = await _httpClient.GetAsync("category");
+            var categoryDTOs = await catResponse.Content
+                .ReadFromJsonAsync<IEnumerable<CategoryDTO>>();
+
+            //var categoryDTO = categoryDTOs.Where(c=>c.)
+
+            //prodDto.AdditionalFields=productCrEdit.AdFields
+            //    .Select(f=>new PropertyField
+            //    {
+            //        Value = f,
+            //        Name = 
+            //    })
             return View();
         }
     }

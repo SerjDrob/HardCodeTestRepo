@@ -8,9 +8,11 @@ namespace HardCodeTest.DTOs.MapProfiles
         public CategoryProfile()
         {
             CreateMap<CategoryDTO, Category>()
-                .ForMember(dest=>dest.MiscFields, opt=>opt.MapFrom(src=>src.MiscFields.Select(mf=>new MiscField { Name = mf})))
+                .ForMember(dest=>dest.MiscFields, 
+                opt=>opt.MapFrom(src=>src.MiscFields.Select(mf=>new MiscField { Name = mf.Name})))
                 .ReverseMap()
-                .ForPath(dest=>dest.MiscFields, opt=>opt.MapFrom(src=>src.MiscFields.Select(mf=>mf.Name)));
+                .ForPath(dest=>dest.MiscFields, 
+                opt=>opt.MapFrom(src=>src.MiscFields.Select(mf=> new PropertyField(mf.Id, mf.Name,null))));
         }
     }
 }

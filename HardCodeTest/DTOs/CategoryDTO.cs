@@ -4,6 +4,6 @@
     {   
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> MiscFields { get; set; }
+        public IEnumerable<PropertyField> MiscFields { get; set; }
     }
 }
