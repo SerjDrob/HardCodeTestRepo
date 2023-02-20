@@ -4,6 +4,7 @@ using HardCodeTest.Data;
 using HardCodeTest.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,10 +14,12 @@ namespace HardCodeTest.Controllers
     [ApiController]
     public class ProductController : BaseController
     {
-        public ProductController(HardCodeDbContext db, IMapper mapper) : base(db, mapper)
+        private readonly IWebHostEnvironment _hostEnvironment;
+       
+        public ProductController(HardCodeDbContext db, IMapper mapper, IWebHostEnvironment hostEnvironment) : base(db, mapper)
         {
+            _hostEnvironment = hostEnvironment;
         }
-
         [HttpGet]
         public ActionResult GetAllProducts()
         {
@@ -25,7 +28,7 @@ namespace HardCodeTest.Controllers
                 .Include(p=>p.Category)
                 .ToList();
             if (products is null) return NotFound();
-            var productDTOs = products.Select(_mapper.Map<ProductDTO>);
+            var productDTOs = products.Select(_mapper.Map<ProductDTO>).ToList();
             return Ok(productDTOs);
         }
 
@@ -41,14 +44,21 @@ namespace HardCodeTest.Controllers
             return Ok(productDTO);
         }
 
-        [HttpPost]
-        public ActionResult AddProduct([FromBody]ProductDTO productDTO)
+
+        public class Data
         {
-            var category = _db.Set<Category>().SingleOrDefault(c=>c.Id== productDTO.CategoryId);
+            public ProductDTO Product { get; set; }
+            //public IFormFile File { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct([FromBody]ProductDTO productDTO)
+        {
+            var category = _db.Set<Category>().SingleOrDefault(c => c.Id == productDTO.CategoryId);
             var miscFieldsExists = productDTO.AdditionalFields
                 .Aggregate(true, (prev, cur) => prev & _db.Set<MiscField>().Any(c => c.Id == cur.Id));
 
-            if(category is null) return BadRequest($"Category {productDTO.CategoryId} doesn't exist");
+            if (category is null) return BadRequest($"Category {productDTO.CategoryId} doesn't exist");
             if (!miscFieldsExists) return BadRequest("One or more additional fields are invalid");
 
             var product = new Product
@@ -57,7 +67,7 @@ namespace HardCodeTest.Controllers
                 Category = category,
                 Description = productDTO.Description,
                 Price = productDTO.Price,
-                Image = productDTO.Image?.FileName,
+                Image = productDTO.ImageName,
                 MiscFieldValues = null,
             };
 
@@ -72,13 +82,16 @@ namespace HardCodeTest.Controllers
             {
                 _db.Add(product);
                 _db.AddRange(newFieldsValue);
+                var bytes = Convert.FromBase64String(productDTO.ImageBytes);
+                var path = Path.Combine(_hostEnvironment.WebRootPath, WC.IMAGES, productDTO.ImageName);
+                await System.IO.File.WriteAllBytesAsync(path, bytes);
                 _db.SaveChanges();
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.ToString());
             }
+            
             return CreatedAtAction(nameof(AddProduct), product);
         }
         

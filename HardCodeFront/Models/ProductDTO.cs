@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace HardCodeFront.Models
@@ -7,7 +8,10 @@ namespace HardCodeFront.Models
     {
         public int Id { get; set; }
         [DisplayName("Изображение")]
+        [JsonIgnore]
         public IFormFile? Image { get; set; }
+        public string? ImageName { get; set; }
+        public string? ImageBytes { get; set; }
         [DisplayName("Название")]
         public string Name { get; set; }
         [DisplayName("Описание")]

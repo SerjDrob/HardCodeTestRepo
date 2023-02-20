@@ -15,9 +15,9 @@ namespace HardCodeFront.Controllers
         {
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var prodResponse = _httpClient.GetAsync("product").Result;
+            var prodResponse = await _httpClient.GetAsync("product");
             var productDTOs = prodResponse.Content.ReadFromJsonAsync<IEnumerable<ProductDTO>>().Result;
             
             var homeVM = new HomeVM 
