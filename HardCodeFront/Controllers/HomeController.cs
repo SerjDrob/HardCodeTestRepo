@@ -1,31 +1,43 @@
 ﻿using HardCodeFront.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
 
 namespace HardCodeFront.Controllers
 {
     public class HomeController : ControllerBase
     {
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory) : base(logger, httpClientFactory)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IWebHostEnvironment webHostEnvironment) : base(logger, httpClientFactory)
         {
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
         {
             var prodResponse = await _httpClient.GetAsync("product");
-            var productDTOs = prodResponse.Content.ReadFromJsonAsync<IEnumerable<ProductDTO>>().Result;
-            
-            var homeVM = new HomeVM 
+            var productDTOs = await prodResponse.Content.ReadFromJsonAsync<IEnumerable<ProductDTO>>();
+            foreach (var product in productDTOs)
             {
-                CategorieNames = productDTOs.Select(c=>c.CategoryName).Distinct(), 
+                await SaveImgFile(product.ImageBytes, product.ImageName);
+            }
+
+            var homeVM = new HomeVM
+            {
+                CategorieNames = productDTOs.Select(c => c.CategoryName).Distinct(),
                 Products = productDTOs
             };
             return View(homeVM);
+        }
+
+        private async Task SaveImgFile(string file, string fileName)
+        {
+            var path = Path.Combine(_webHostEnvironment.WebRootPath + WC.ImagesPath, fileName);
+            if (!Path.Exists(path))
+            {
+                var bytes = Convert.FromBase64String(file);
+                await System.IO.File.WriteAllBytesAsync(path, bytes);
+            }
         }
 
         public IActionResult Privacy()

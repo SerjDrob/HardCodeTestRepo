@@ -4,7 +4,7 @@
 @model HomeVM
 <div class="container">
     <div class="text-center">
-        <button class="btn btn-dark filter-button" data-filter="all">All</button>
+        <button class="btn btn-dark filter-button" data-filter="all">Все</button>
         @foreach (var name in Model.CategorieNames)
         {
             <button class="btn btn-outline-secondary filter-button" data-filter="@name">
@@ -22,6 +22,12 @@
             }
         }
     </div>
+
+    <div class="modal fade" id="watchProduct" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div id="cardBody" class="modal-content mb-0"></div>
+        </div>
+    </div>
 </div>
 
 @section Scripts{
@@ -38,5 +44,21 @@
                 }
             });
         });
+
+
+        var exampleModal = document.getElementById('watchProduct')
+        exampleModal.addEventListener('show.bs.modal', function (event) {
+            
+            var button = event.relatedTarget
+            var prodId = button.getAttribute('data-bs-whatever')
+
+            fetch(`Product/GetProduct/${prodId}`)
+            .then((response)=>{
+                return response.text();
+            })
+            .then((result)=>{
+                document.getElementById('cardBody').innerHTML=result;
+            });
+        })
     </script>
 }

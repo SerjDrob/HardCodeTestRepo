@@ -1,10 +1,5 @@
 ﻿using HardCodeFront.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
 
 namespace HardCodeFront.Controllers
 {
@@ -28,7 +23,7 @@ namespace HardCodeFront.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Index(ProductCrEditVM productCrEdit) 
+        public async Task<IActionResult> Index(ProductCrEditVM productCrEdit)
         {
             var prodDto = productCrEdit.ProductDTO;
 
@@ -40,7 +35,7 @@ namespace HardCodeFront.Controllers
                 .SelectMany(c => c.MiscFields)
                 .Select(m => m.Id)
                 .Zip(productCrEdit.AdFields)
-                .Select(r => new PropertyField(r.First,null, r.Second))
+                .Select(r => new PropertyField(r.First, null, r.Second))
                 .ToList();
 
             prodDto.AdditionalFields = fields;
@@ -55,21 +50,15 @@ namespace HardCodeFront.Controllers
 
             var response = await _httpClient.PostAsJsonAsync("product", prodDto);
             if (!response.IsSuccessStatusCode) return BadRequest(response);
-            return RedirectToAction("index","home");
+            return RedirectToAction("index", "home");
         }
-        public class ProdTemp
+
+        [HttpGet]
+        public async Task<IActionResult> GetProduct(int id)
         {
-            public int Id { get; set; }
-            //public IFormFile? Image { get; set; }
-            public string Name { get; set; }
-            public string? Description { get; set; }
-            public decimal Price { get; set; }
-            public int CategoryId { get; set; }
-            public string? CategoryName { get; set; }
-            /// <summary>
-            /// MiscFieldId, MiscFieldName,MiscFildValue
-            /// </summary>
-            public IList<PropertyField>? AdditionalFields { get; set; }
+            var prodResponse = await _httpClient.GetAsync($"product/{id}");
+            var productDTO = await prodResponse.Content.ReadFromJsonAsync<ProductDTO>();
+            return View("ProductInfo",productDTO);
         }
     }
 }

@@ -36,10 +36,7 @@ namespace HardCodeFront.Controllers
             };
             return View(categoryDTO);
         }
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
+
         [HttpPost]
         public async Task<IActionResult> Create(CategoryDTO categoryDTO)
         {

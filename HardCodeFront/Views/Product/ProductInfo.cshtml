@@ -1,0 +1,28 @@
+﻿@model ProductDTO
+@{
+    Layout = null;
+}
+<div>
+    <div class="card bg-white rounded shadow-sm" style="border:1px solid #222">
+        <div class="card-body flex-fill px-3 pt-3 pb-1 row">
+            <h5 class="card-title">@Model.Name</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@Model.CategoryName</h6>
+            <div class="col-5"><label class="float-right"><span class="text-info h5">@string.Format("{0:c0}", Model.Price)</div>
+             <ul class ="list-group list-group-flush">
+                @for (int i = 0; i < Model.AdditionalFields.Count; i++)
+                {
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>@Model.AdditionalFields[i].Name</strong>
+                            @Model.AdditionalFields[i].Value
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <img class="card-img-top img-fluid d-block mx-auto m-3" style="height:contain" src="@WC.ImagesPath@Model.ImageName" alt="Card image cap">
+        <div class="card-body p-1 px-3 row">
+            <p class="card-text"> @Model.Description</p>
+        </div>
+    </div>
+</div>

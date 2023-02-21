@@ -4,9 +4,6 @@ using HardCodeTest.Data;
 using HardCodeTest.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace HardCodeTest.Controllers
 {
@@ -36,19 +33,12 @@ namespace HardCodeTest.Controllers
         public ActionResult GetProduct(int id)
         {
             var product = _db.Set<Product>()
-                .Include(p => p.MiscFieldValues)
+                .Include(p => p.MiscFieldValues).ThenInclude(mv => mv.MiscField)
                 .Include(p => p.Category)
                 .SingleOrDefault(p=>p.Id== id);
             if (product is null) return NotFound();
             var productDTO = _mapper.Map<ProductDTO>(product);
             return Ok(productDTO);
-        }
-
-
-        public class Data
-        {
-            public ProductDTO Product { get; set; }
-            //public IFormFile File { get; set; }
         }
 
         [HttpPost]
